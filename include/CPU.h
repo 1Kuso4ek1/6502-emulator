@@ -33,4 +33,10 @@ private:
 
     //JSR - Jump to subroutine
     void JSR_AB(Memory& memory);
+
+    //Register transfers
+    void TAX_IP(); //Transfer accumulator to X
+    void TAY_IP(); //Transfer accumulator to Y
+    void TXA_IP(); //Transfer X to accumulator
+    void TYA_IP(); //Transfer Y to accumulator
 };
