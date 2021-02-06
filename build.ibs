@@ -1,0 +1,8 @@
+files {
+main.cpp
+CPU.cpp
+Memory.cpp
+}
+name {
+6502
+}
