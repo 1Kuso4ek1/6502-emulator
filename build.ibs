@@ -1,7 +1,10 @@
+flags {
+Iinclude/
+}
 files {
 main.cpp
-CPU.cpp
-Memory.cpp
+src/CPU.cpp
+src/Memory.cpp
 }
 name {
 6502
