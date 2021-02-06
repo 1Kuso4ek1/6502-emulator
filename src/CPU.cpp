@@ -21,6 +21,10 @@ void CPU::Execute(Memory& memory)
         case 0xA5: LDA_ZP(memory); break;
         case 0xB5: LDA_ZP_X(memory); break;
         case 0x20: JSR_AB(memory); break; 
+        case 0xAA: TAX_IP(); break;
+        case 0xA8: TAY_IP(); break;
+        case 0x8A: TXA_IP(); break;
+        case 0x98: TYA_IP(); break;
         default: cycles = 1;
         }           
     }
@@ -102,4 +106,40 @@ void CPU::JSR_AB(Memory& memory)
     sp -= 2;
     pc = address;
     cycles--;
+}
+
+void CPU::TAX_IP()
+{
+    cycles = 2;
+    X = A;
+    cycles--;
+    Z = (X == 0);
+    N = (X & 0b10000000) > 0;
+}
+
+void CPU::TAY_IP()
+{
+    cycles = 2;
+    Y = A;
+    cycles--;
+    Z = (Y == 0);
+    N = (Y & 0b10000000) > 0;
+}
+
+void CPU::TXA_IP()
+{
+    cycles = 2;
+    A = X;
+    cycles--;
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::TYA_IP()
+{
+    cycles = 2;
+    A = Y;
+    cycles--;
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
 }
