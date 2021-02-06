@@ -89,7 +89,7 @@ void CPU::LDA_ZP_X(Memory& memory)
     uint8_t data = GetByte(memory);
     data += X;
     cycles--;
-    A = ReadByte(memory, GetByte(memory));
+    A = ReadByte(memory, data);
     Z = (A == 0);
     N = (A & 0b10000000) > 0;
 }
