@@ -9,9 +9,10 @@ public:
     void GetStatus();
 private:
     uint8_t GetByte(Memory& memory);
-    uint8_t ReadByte(Memory& memory, uint8_t address);
+    uint8_t ReadByte(Memory& memory, uint16_t address);
 
     uint16_t GetWord(Memory& memory);
+    uint16_t ReadWord(Memory& memory, uint16_t address);
     void WriteWord(Memory& memory, uint16_t data, uint32_t address);
 
     uint16_t pc; //Program counter
@@ -30,6 +31,11 @@ private:
     void LDA_IM(Memory& memory); //LDA immediate
     void LDA_ZP(Memory& memory); //LDA zero page
     void LDA_ZP_X(Memory& memory); //LDA zero page, X
+    void LDA_AB(Memory& memory); //LDA absolute
+    void LDA_AB_X(Memory& memory); //LDA absolute, X
+    void LDA_AB_Y(Memory& memory); //LDA absolute, Y
+    void LDA_ID_X(Memory& memory); //LDA indirect, X
+    void LDA_ID_Y(Memory& memory); //LDA indirect, Y
 
     //JSR - Jump to subroutine
     void JSR_AB(Memory& memory);
