@@ -20,6 +20,11 @@ void CPU::Execute(Memory& memory)
         case 0xA9: LDA_IM(memory); break;
         case 0xA5: LDA_ZP(memory); break;
         case 0xB5: LDA_ZP_X(memory); break;
+        case 0xAD: LDA_AB(memory); break;
+        case 0xBD: LDA_AB_X(memory); break;
+        case 0xB9: LDA_AB_Y(memory); break;
+        case 0xA1: LDA_ID_X(memory); break;
+        case 0xB1: LDA_ID_Y(memory); break;
         case 0x20: JSR_AB(memory); break; 
         case 0xAA: TAX_IP(); break;
         case 0xA8: TAY_IP(); break;
@@ -47,7 +52,7 @@ uint8_t CPU::GetByte(Memory& memory)
     return data;
 }
 
-uint8_t CPU::ReadByte(Memory& memory, uint8_t address)
+uint8_t CPU::ReadByte(Memory& memory, uint16_t address)
 {
     cycles--;
     return memory[address];
@@ -61,6 +66,12 @@ uint16_t CPU::GetWord(Memory& memory)
     pc++;
     cycles -= 2;
     return data;
+}
+
+uint16_t CPU::ReadWord(Memory& memory, uint16_t address)
+{
+    cycles -= 2;
+    return (uint16_t)(ReadByte(memory, address) | (ReadByte(memory, address + 1) << 8));
 }
 
 void CPU::WriteWord(Memory& memory, uint16_t data, uint32_t address)
@@ -94,6 +105,49 @@ void CPU::LDA_ZP_X(Memory& memory)
     data += X;
     cycles--;
     A = ReadByte(memory, data);
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::LDA_AB(Memory& memory)
+{
+    cycles = 4;
+    A = ReadByte(memory, GetWord(memory));
+    std::cout << "A = " << std::hex << (int)A << std::endl;
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::LDA_AB_X(Memory& memory)
+{
+    cycles = 4;
+    uint16_t address = GetWord(memory);
+    A = ReadByte(memory, address + X);
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::LDA_AB_Y(Memory& memory)
+{
+    cycles = 4;
+    A = ReadByte(memory, (uint16_t)(GetWord(memory) + Y));
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::LDA_ID_X(Memory& memory)
+{
+    cycles = 6;
+    A = ReadByte(memory, ReadWord(memory, (uint16_t)(GetByte(memory) + X)));
+    cycles--;
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::LDA_ID_Y(Memory& memory)
+{
+    cycles = 5;
+    A = ReadByte(memory, ReadWord(memory, (uint16_t)(GetByte(memory))) + Y);
     Z = (A == 0);
     N = (A & 0b10000000) > 0;
 }
