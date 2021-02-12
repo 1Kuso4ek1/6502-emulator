@@ -113,7 +113,6 @@ void CPU::LDA_AB(Memory& memory)
 {
     cycles = 4;
     A = ReadByte(memory, GetWord(memory));
-    std::cout << "A = " << std::hex << (int)A << std::endl;
     Z = (A == 0);
     N = (A & 0b10000000) > 0;
 }
