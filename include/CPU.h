@@ -37,6 +37,20 @@ private:
     void LDA_ID_X(Memory& memory); //LDA indirect, X
     void LDA_ID_Y(Memory& memory); //LDA indirect, Y
 
+    //LDX - Load X Register
+    void LDX_IM(Memory& memory); //LDX immediate
+    void LDX_ZP(Memory& memory); //LDX zero page
+    void LDX_ZP_Y(Memory& memory); //LDX zero page, Y
+    void LDX_AB(Memory& memory); //LDX absolute
+    void LDX_AB_Y(Memory& memory); //LDX absolute, Y
+
+    //LDY - Load Y Register
+    void LDY_IM(Memory& memory); //LDY immediate
+    void LDY_ZP(Memory& memory); //LDY zero page
+    void LDY_ZP_X(Memory& memory); //LDY zero page, X
+    void LDY_AB(Memory& memory); //LDY absolute
+    void LDY_AB_X(Memory& memory); //LDY absolute, X
+
     //JSR - Jump to subroutine
     void JSR_AB(Memory& memory);
 
