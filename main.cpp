@@ -3,7 +3,7 @@
 
 void ReadFile(std::string path, Memory& memory)
 {
-    std::ifstream file("Mario.nes", std::ios::binary);
+    std::ifstream file(path, std::ios::binary);
     file >> std::noskipws;
     uint8_t data;
     int offset = 0x8000;
