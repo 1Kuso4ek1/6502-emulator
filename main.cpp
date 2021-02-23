@@ -1,4 +1,16 @@
 #include "CPU.h"
+#include <fstream>
+
+void ReadFile(std::string path, Memory& memory)
+{
+    std::ifstream file("Mario.nes", std::ios::binary);
+    file >> std::noskipws;
+    uint8_t data;
+    int offset = 0x8000;
+    while (file >> data) {
+        memory[offset++] = data;
+    }
+}
 
 int main()
 {
@@ -6,12 +18,12 @@ int main()
     Memory m;
     cpu.Reset(m);
     //Simple program
-    m[0x8000] = 0xAD; m[0x8001] = 0x42; m[0x8002] = 0x42; m[0x4242] = 0x55; m[0x8003] = 0xA5; m[0x8004] = 0x50;
-    m[0x0050] = 0xE5; m[0x8005] = 0xAA; m[0x8006] = 0xBD; m[0x8007] = 0x00; m[0x8008] = 0x50; m[0x50E5] = 0xFA;
-    m[0x8009] = 0xA8; m[0x800A] = 0xA0; m[0x800B] = 0x85;
-    for(int i = 0; i < 6; i++) {
-        //cpu.GetStatus();
+    m[0x8000] = 0xA9; m[0x8001] = 0x23;  m[8005] = 0x8A; 
+    m[0x8006] = 0x48; m[0x8007] = 0xA9; m[0x8008] = 0xAA; m[0x8009] = 0x68;
+
+    for(int i = 0; i < 8; i++) {
+        //cpu.GetStatus(m);
         cpu.Execute(m);
-        cpu.GetStatus();
+        cpu.GetStatus(m);
     } 
 }
