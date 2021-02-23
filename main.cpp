@@ -6,9 +6,9 @@ void ReadFile(std::string path, Memory& memory)
     std::ifstream file(path, std::ios::binary);
     file >> std::noskipws;
     uint8_t data;
-    int offset = 0x8000;
+    int offset = 0x7FFF;
     while (file >> data) {
-        memory[offset++] = data;
+        memory[++offset] = data;
     }
 }
 
