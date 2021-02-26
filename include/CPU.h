@@ -4,7 +4,7 @@
 class CPU
 {
 public:
-    void Reset(Memory& memory);
+    void Reset(Memory& memory, uint16_t start);
     void Execute(Memory& memory);
     void GetStatus(Memory& memory);
 private:
@@ -28,8 +28,12 @@ private:
     //Registers (Accumulator, index register X, index register Y)
     uint8_t A, X, Y;
 
-    //Processor statuses (Carry flag, zero flag, interrupt disable, decimal mode, unused flag, break command, overflow flag, negative flag)
-    uint8_t C : 1, Z : 1, I : 1, D : 1, U : 1, B : 1, V : 1, N : 1;
+    union
+    {
+        uint8_t ps;
+        //Processor statuses (Carry flag, zero flag, interrupt disable, decimal mode, unused flag, break command, overflow flag, negative flag)
+        struct { uint8_t C : 1, Z : 1, I : 1, D : 1, U : 1, B : 1, V : 1, N : 1; };
+    };
 
     uint32_t cycles;
 
@@ -98,4 +102,15 @@ private:
     void TXS_IP(); //Transfer X to stack pointer
     void PHA_IP(Memory& memory); //Push accumulator on stack
     void PLA_IP(Memory& memory); //Pull accumulator from stack
+    void PHP_IP(Memory& memory); //Push processor status on stack
+    void PLP_IP(Memory& memory); //Pull processor status from stack
+
+    //Status flag changes
+    void CLC_IP(); //Clear carry flag
+    void CLD_IP(); //Clear decimal mode flag
+    void CLI_IP(); //Clear interrupt disable flag
+    void CLV_IP(); //Clear overflow flag
+    void SEC_IP(); //Set carry flag
+    void SED_IP(); //Set decimal model flag
+    void SEI_IP(); //Set interrupt disable flag
 };
