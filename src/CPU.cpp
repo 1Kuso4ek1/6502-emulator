@@ -1,8 +1,8 @@
 #include "CPU.h"
 
-void CPU::Reset(Memory& memory)
+void CPU::Reset(Memory& memory, uint16_t start)
 {
-    pc = 0x8000;
+    pc = start;
     sp = 0xFF;
     C = Z = I = D = B = V = N = 0;
     U = 1;
@@ -72,6 +72,16 @@ void CPU::Execute(Memory& memory)
         case 0x9A: TXS_IP(); break;
         case 0x48: PHA_IP(memory); break;
         case 0x68: PLA_IP(memory); break;
+        case 0x08: PHP_IP(memory); break;
+        case 0x28: PLP_IP(memory); break;
+        //Status flag changes
+        case 0x18: CLC_IP(); break;
+        case 0xD8: CLD_IP(); break;
+        case 0x58: CLI_IP(); break;
+        case 0xB8: CLV_IP(); break;
+        case 0x38: SEC_IP(); break;
+        case 0xF8: SED_IP(); break;
+        case 0x78: SEI_IP(); break;
         default: cycles = 1;
         }           
     }
@@ -80,7 +90,6 @@ void CPU::Execute(Memory& memory)
 
 void CPU::GetStatus(Memory& memory)
 {
-    std::cout << cycles << std::endl;
     std::cout << "Program counter = " << std::hex << (int)pc << std::endl;
     std::cout << "Stack pointer = " << std::hex << (int)sp << std::endl;
     std::cout << "memory[pc] = " << std::hex << (int)memory[pc] << std::endl;
@@ -505,4 +514,67 @@ void CPU::PLA_IP(Memory& memory)
     cycles--;
     Z = (A == 0);
     N = (A & 0b10000000) > 0;
+}
+
+void CPU::PHP_IP(Memory& memory)
+{
+    cycles = 3;
+    WriteByteToStack(memory, ps);
+}
+
+void CPU::PLP_IP(Memory& memory)
+{
+    cycles = 4;
+    ps = GetStackByte(memory);
+    cycles--;
+}
+
+//Status flag changes
+void CPU::CLC_IP()
+{
+    cycles = 2;
+    C = 0;
+    cycles--;
+}
+
+void CPU::CLD_IP()
+{
+    cycles = 2;
+    D = 0;
+    cycles--;
+}
+
+void CPU::CLI_IP()
+{
+    cycles = 2;
+    I = 0;
+    cycles--;
+}
+
+void CPU::CLV_IP()
+{
+    cycles = 2;
+    V = 0;
+    cycles--;
+}
+
+void CPU::SEC_IP()
+{
+    cycles = 2;
+    C = 1;
+    cycles--;
+}
+
+void CPU::SED_IP()
+{
+    cycles = 2;
+    D = 1;
+    cycles--;
+}
+
+void CPU::SEI_IP()
+{
+    cycles = 2;
+    I = 1;
+    cycles--;
 }
