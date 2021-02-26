@@ -113,4 +113,35 @@ private:
     void SEC_IP(); //Set carry flag
     void SED_IP(); //Set decimal model flag
     void SEI_IP(); //Set interrupt disable flag
+    
+    //Logical operations
+    //AND - Logical and
+    void AND_IM(Memory& memory); //AND immediate
+    void AND_ZP(Memory& memory); //AND zero page
+    void AND_ZP_X(Memory& memory); //AND zero page, X
+    void AND_AB(Memory& memory); //AND absolute
+    void AND_AB_X(Memory& memory); //AND absolute, X
+    void AND_AB_Y(Memory& memory); //AND absolute, Y
+    void AND_ID_X(Memory& memory); //AND indirect, X
+    void AND_ID_Y(Memory& memory); //AND indirect, Y
+
+    //ORA - Logical inclusive or
+    void ORA_IM(Memory& memory); //ORA immediate
+    void ORA_ZP(Memory& memory); //ORA zero page
+    void ORA_ZP_X(Memory& memory); //ORA zero page, X
+    void ORA_AB(Memory& memory); //ORA absolute
+    void ORA_AB_X(Memory& memory); //ORA absolute, X
+    void ORA_AB_Y(Memory& memory); //ORA absolute, Y
+    void ORA_ID_X(Memory& memory); //ORA indirect, X
+    void ORA_ID_Y(Memory& memory); //ORA indirect, Y
+
+    //EOR - Logical exclusive or
+    void EOR_IM(Memory& memory); //EOR immediate
+    void EOR_ZP(Memory& memory); //EOR zero page
+    void EOR_ZP_X(Memory& memory); //EOR zero page, X
+    void EOR_AB(Memory& memory); //EOR absolute
+    void EOR_AB_X(Memory& memory); //EOR absolute, X
+    void EOR_AB_Y(Memory& memory); //EOR absolute, Y
+    void EOR_ID_X(Memory& memory); //EOR indirect, X
+    void EOR_ID_Y(Memory& memory); //EOR indirect, Y
 };
