@@ -82,6 +82,33 @@ void CPU::Execute(Memory& memory)
         case 0x38: SEC_IP(); break;
         case 0xF8: SED_IP(); break;
         case 0x78: SEI_IP(); break;
+        //AND - Logical and
+        case 0x29: AND_IM(memory); break;
+        case 0x25: AND_ZP(memory); break;
+        case 0x35: AND_ZP_X(memory); break;
+        case 0x2D: AND_AB(memory); break;
+        case 0x3D: AND_AB_X(memory); break;
+        case 0x39: AND_AB_Y(memory); break;
+        case 0x21: AND_ID_X(memory); break;
+        case 0x31: AND_ID_Y(memory); break;
+        //ORA - Logical inclusive or
+        case 0x09: ORA_IM(memory); break;
+        case 0x05: ORA_ZP(memory); break;
+        case 0x15: ORA_ZP_X(memory); break;
+        case 0x0D: ORA_AB(memory); break;
+        case 0x1D: ORA_AB_X(memory); break;
+        case 0x19: ORA_AB_Y(memory); break;
+        case 0x01: ORA_ID_X(memory); break;
+        case 0x11: ORA_ID_Y(memory); break;
+        //EOR - Logical exclusive or
+        case 0x49: EOR_IM(memory); break;
+        case 0x45: EOR_ZP(memory); break;
+        case 0x55: EOR_ZP_X(memory); break;
+        case 0x4D: EOR_AB(memory); break;
+        case 0x5D: EOR_AB_X(memory); break;
+        case 0x59: EOR_AB_Y(memory); break;
+        case 0x41: EOR_ID_X(memory); break;
+        case 0x51: EOR_ID_Y(memory); break;
         default: cycles = 1;
         }           
     }
@@ -577,4 +604,214 @@ void CPU::SEI_IP()
     cycles = 2;
     I = 1;
     cycles--;
+}
+
+//AND - Logical and
+void CPU::AND_IM(Memory& memory)
+{
+    cycles = 2;
+    A &= GetByte(memory);
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::AND_ZP(Memory& memory)
+{
+    cycles = 3;
+    A &= ReadByte(memory, GetByte(memory));
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::AND_ZP_X(Memory& memory)
+{
+    cycles = 4;
+    uint8_t data = GetByte(memory);
+    data += X;
+    cycles--;
+    A &= ReadByte(memory, data);
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::AND_AB(Memory& memory)
+{
+    cycles = 4;
+    A &= ReadByte(memory, GetWord(memory));
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::AND_AB_X(Memory& memory)
+{
+    cycles = 4;
+    uint16_t address = GetWord(memory);
+    A &= ReadByte(memory, address + X);
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::AND_AB_Y(Memory& memory)
+{
+    cycles = 4;
+    A &= ReadByte(memory, (uint16_t)(GetWord(memory) + Y));
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::AND_ID_X(Memory& memory)
+{
+    cycles = 6;
+    A &= ReadByte(memory, ReadWord(memory, (uint16_t)(GetByte(memory) + X)));
+    cycles--;
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::AND_ID_Y(Memory& memory)
+{
+    cycles = 5;
+    A &= ReadByte(memory, ReadWord(memory, (uint16_t)(GetByte(memory))) + Y);
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+//ORA - Logical inclusive or
+void CPU::ORA_IM(Memory& memory)
+{
+    cycles = 2;
+    A |= GetByte(memory);
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::ORA_ZP(Memory& memory)
+{
+    cycles = 3;
+    A |= ReadByte(memory, GetByte(memory));
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::ORA_ZP_X(Memory& memory)
+{
+    cycles = 4;
+    uint8_t data = GetByte(memory);
+    data += X;
+    cycles--;
+    A |= ReadByte(memory, data);
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::ORA_AB(Memory& memory)
+{
+    cycles = 4;
+    A |= ReadByte(memory, GetWord(memory));
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::ORA_AB_X(Memory& memory)
+{
+    cycles = 4;
+    uint16_t address = GetWord(memory);
+    A |= ReadByte(memory, address + X);
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::ORA_AB_Y(Memory& memory)
+{
+    cycles = 4;
+    A |= ReadByte(memory, (uint16_t)(GetWord(memory) + Y));
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::ORA_ID_X(Memory& memory)
+{
+    cycles = 6;
+    A |= ReadByte(memory, ReadWord(memory, (uint16_t)(GetByte(memory) + X)));
+    cycles--;
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::ORA_ID_Y(Memory& memory)
+{
+    cycles = 5;
+    A |= ReadByte(memory, ReadWord(memory, (uint16_t)(GetByte(memory))) + Y);
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+//EOR - Logical exclusive or
+void CPU::EOR_IM(Memory& memory)
+{
+    cycles = 2;
+    A ^= GetByte(memory);
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::EOR_ZP(Memory& memory)
+{
+    cycles = 3;
+    A ^= ReadByte(memory, GetByte(memory));
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::EOR_ZP_X(Memory& memory)
+{
+    cycles = 4;
+    uint8_t data = GetByte(memory);
+    data += X;
+    cycles--;
+    A ^= ReadByte(memory, data);
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::EOR_AB(Memory& memory)
+{
+    cycles = 4;
+    A ^= ReadByte(memory, GetWord(memory));
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::EOR_AB_X(Memory& memory)
+{
+    cycles = 4;
+    uint16_t address = GetWord(memory);
+    A ^= ReadByte(memory, address + X);
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::EOR_AB_Y(Memory& memory)
+{
+    cycles = 4;
+    A ^= ReadByte(memory, (uint16_t)(GetWord(memory) + Y));
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::EOR_ID_X(Memory& memory)
+{
+    cycles = 6;
+    A ^= ReadByte(memory, ReadWord(memory, (uint16_t)(GetByte(memory) + X)));
+    cycles--;
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+}
+
+void CPU::EOR_ID_Y(Memory& memory)
+{
+    cycles = 5;
+    A ^= ReadByte(memory, ReadWord(memory, (uint16_t)(GetByte(memory))) + Y);
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
 }
