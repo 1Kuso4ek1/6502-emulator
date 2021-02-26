@@ -1,15 +1,16 @@
 #include "CPU.h"
 #include <fstream>
 #include <string.h>
+#include <sstream>
 
-bool ReadFile(std::string path, Memory& memory)
+bool ReadFile(std::string path, Memory& memory, uint16_t pcpos)
 {
     std::ifstream file(path, std::ios::binary);
     if(file.is_open())
     {
         file >> std::noskipws;
         uint8_t data;
-        uint16_t offset = 0x7FFF;
+        uint16_t offset = pcpos - 1;
         while (file >> data) {
             memory[++offset] = data;
         }
@@ -22,19 +23,22 @@ int main(int argc, char** argv)
 {
     CPU cpu;
     Memory m;
-    cpu.Reset(m, 0x8000);
     std::string action;
+    std::stringstream a;
+    uint16_t addr;
     bool memoryControl;
     memoryControl = (strcmp(argv[1], "--memory-control") == 0); 
+    
     if(strcmp(argv[1], "--help") == 0)
     {
-        std::cout << "Usage: ./6502 [option] *file path* *number of executions*" << std::endl;
+        std::cout << "Usage: ./6502 [option] *file path* *number of executions* *PC address*" << std::endl;
         std::cout << "Options:" << std::endl;
         std::cout << "--help - Display this information" << std::endl;
         std::cout << "--help-debug - Display help " << std::endl;
         std::cout << "--memory-control - Enable runtime memory control mode" << std::endl;
         exit(EXIT_SUCCESS);
     }
+    
     if(strcmp(argv[1], "--help-memory-control") == 0)
     {
         std::cout << "stack - Display stack content" << std::endl;
@@ -42,11 +46,17 @@ int main(int argc, char** argv)
         std::cout << "write (next line - absolute address, second line - data) - Write data at absolute address" << std::endl;
         exit(EXIT_SUCCESS);
     }
-    if(!ReadFile(argv[(int)(memoryControl + 1)], m))
+
+    a << argv[(int)(memoryControl + 3)];
+    a >> std::hex >> addr;
+    cpu.Reset(m, addr);
+    
+    if(!ReadFile(argv[(int)(memoryControl + 1)], m, addr))
     {
         std::cout << "Error: can't read file" << std::endl;
         exit(EXIT_FAILURE);
     }
+    
     for(int i = 0; i < atoi(argv[(int)(memoryControl + 2)]); i++) 
     {
         cpu.GetStatus(m);
