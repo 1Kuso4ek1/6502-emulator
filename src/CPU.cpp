@@ -109,6 +109,40 @@ void CPU::Execute(Memory& memory)
         case 0x59: EOR_AB_Y(memory); break;
         case 0x41: EOR_ID_X(memory); break;
         case 0x51: EOR_ID_Y(memory); break;
+        //BIT - Bit test
+        case 0x24: BIT_ZP(memory); break;
+        case 0x2C: BIT_AB(memory); break;
+        //Increments and decrements
+        case 0xE6: INC_ZP(memory); break;
+        case 0xF6: INC_ZP_X(memory); break;
+        case 0xEE: INC_AB(memory); break;
+        case 0xFE: INC_AB_X(memory); break;
+        case 0xE8: INX_IP(); break;
+        case 0xC8: INY_IP(); break;
+        case 0xC6: DEC_ZP(memory); break;
+        case 0xD6: DEC_ZP_X(memory); break;
+        case 0xCE: DEC_AB(memory); break;
+        case 0xDE: DEC_AB_X(memory); break;
+        case 0xCA: DEX_IP(); break;
+        case 0x88: DEY_IP(); break;
+        //Branches
+        case 0x90: BCC_RL(memory); break;
+        case 0xB0: BCS_RL(memory); break;
+        case 0xD0: BNE_RL(memory); break;
+        case 0xF0: BEQ_RL(memory); break;
+        case 0x10: BPL_RL(memory); break;
+        case 0x30: BMI_RL(memory); break;
+        case 0x50: BVC_RL(memory); break;
+        case 0x70: BVS_RL(memory); break;
+        //Arithmetic
+        case 0x69: ADC_IM(memory); break;
+        case 0x65: ADC_ZP(memory); break;
+        case 0x75: ADC_ZP_X(memory); break;
+        case 0x6D: ADC_AB(memory); break;
+        case 0x7D: ADC_AB_X(memory); break;
+        case 0x79: ADC_AB_Y(memory); break;
+        case 0x61: ADC_ID_X(memory); break;
+        case 0x71: ADC_ID_Y(memory); break;
         default: cycles = 1;
         }           
     }
@@ -814,4 +848,296 @@ void CPU::EOR_ID_Y(Memory& memory)
     A ^= ReadByte(memory, ReadWord(memory, (uint16_t)(GetByte(memory))) + Y);
     Z = (A == 0);
     N = (A & 0b10000000) > 0;
+}
+
+//BIT - Bit test
+void CPU::BIT_ZP(Memory& memory)
+{
+    cycles = 3;
+    uint8_t data = ReadByte(memory, GetByte(memory));
+    Z = !(A & data);
+    V = (data & 0b01000000) > 0;
+    N = (data & 0b10000000) > 0;
+}
+
+void CPU::BIT_AB(Memory& memory)
+{
+    cycles = 4;
+    uint8_t data = ReadByte(memory, GetWord(memory));
+    Z = !(A & data);
+    V = (data & 0b01000000) > 0;
+    N = (data & 0b10000000) > 0;
+}
+
+//INC - Increment a memory location
+void CPU::INC_ZP(Memory& memory)
+{
+    cycles = 5;
+    uint8_t addr = GetByte(memory), result = ReadByte(memory, addr) + 1;
+    cycles--;
+    WriteByte(memory, addr, result);
+    Z = (result == 0);
+    N = (result & 0b10000000) > 0;
+}
+
+void CPU::INC_ZP_X(Memory& memory)
+{
+    cycles = 6;
+    uint8_t addr = GetByte(memory) + X, result = ReadByte(memory, addr) + 1;
+    cycles -= 2;
+    WriteByte(memory, addr, result);
+    Z = (result == 0);
+    N = (result & 0b10000000) > 0;
+}
+
+void CPU::INC_AB(Memory& memory)
+{
+    cycles = 6;
+    uint16_t addr = GetWord(memory), result = ReadByte(memory, addr) + 1;
+    cycles--;
+    WriteByte(memory, addr, result);
+    Z = (result == 0);
+    N = (result & 0b10000000) > 0;
+}
+
+void CPU::INC_AB_X(Memory& memory)
+{
+    cycles = 7;
+    uint16_t addr = GetWord(memory) + X, result = ReadByte(memory, addr) + 1;
+    cycles -= 2;
+    WriteByte(memory, addr, result);
+    Z = (result == 0);
+    N = (result & 0b10000000) > 0;
+}
+
+void CPU::INX_IP()
+{
+    cycles = 2;
+    X++;
+    cycles--;
+    Z = (X == 0);
+    N = (X & 0b10000000) > 0;
+}
+
+void CPU::INY_IP()
+{
+    cycles = 2;
+    Y++;
+    cycles--;
+    Z = (Y == 0);
+    N = (Y & 0b10000000) > 0;
+}
+
+//DEC - Decrement a memory location
+void CPU::DEC_ZP(Memory& memory)
+{
+    cycles = 5;
+    uint8_t addr = GetByte(memory), result = ReadByte(memory, addr) - 1;
+    cycles--;
+    WriteByte(memory, addr, result);
+    Z = (result == 0);
+    N = (result & 0b10000000) > 0;
+}
+
+void CPU::DEC_ZP_X(Memory& memory)
+{
+    cycles = 6;
+    uint8_t addr = GetByte(memory) + X, result = ReadByte(memory, addr) - 1;
+    cycles -= 2;
+    WriteByte(memory, addr, result);
+    Z = (result == 0);
+    N = (result & 0b10000000) > 0;
+}
+
+void CPU::DEC_AB(Memory& memory)
+{
+    cycles = 6;
+    uint16_t addr = GetWord(memory), result = ReadByte(memory, addr) - 1;
+    cycles--;
+    WriteByte(memory, addr, result);
+    Z = (result == 0);
+    N = (result & 0b10000000) > 0;
+}
+
+void CPU::DEC_AB_X(Memory& memory)
+{
+    cycles = 7;
+    uint16_t addr = GetWord(memory) + X, result = ReadByte(memory, addr) - 1;
+    cycles -= 2;
+    WriteByte(memory, addr, result);
+    Z = (result == 0);
+    N = (result & 0b10000000) > 0;
+}
+
+void CPU::DEX_IP()
+{
+    cycles = 2;
+    X--;
+    cycles--;
+    Z = (X == 0);
+    N = (X & 0b10000000) > 0;
+}
+
+void CPU::DEY_IP()
+{
+    cycles = 2;
+    Y--;
+    cycles--;
+    Z = (Y == 0);
+    N = (Y & 0b10000000) > 0;
+}
+
+//Branches
+void CPU::BCC_RL(Memory& memory)
+{
+    cycles = 2;
+    uint8_t offset = GetByte(memory);
+    pc += (!C) ? static_cast<int8_t>(offset) : 0;
+}
+
+void CPU::BCS_RL(Memory& memory)
+{
+    cycles = 2;
+    uint8_t offset = GetByte(memory);
+    pc += (C) ? static_cast<int8_t>(offset) : 0;
+}
+
+void CPU::BNE_RL(Memory& memory)
+{
+    cycles = 2;
+    uint8_t offset = GetByte(memory);
+    pc += (!Z) ? static_cast<int8_t>(offset) : 0;
+}
+
+void CPU::BEQ_RL(Memory& memory)
+{
+    cycles = 2;
+    uint8_t offset = GetByte(memory);
+    pc += (Z) ? static_cast<int8_t>(offset) : 0;
+}
+
+void CPU::BPL_RL(Memory& memory)
+{
+    cycles = 2;
+    uint8_t offset = GetByte(memory);
+    pc += (!N) ? static_cast<int8_t>(offset) : 0;
+}
+
+void CPU::BMI_RL(Memory& memory)
+{
+    cycles = 2;
+    uint8_t offset = GetByte(memory);
+    pc += (N) ? static_cast<int8_t>(offset) : 0;
+}
+
+void CPU::BVC_RL(Memory& memory)
+{
+    cycles = 2;
+    uint8_t offset = GetByte(memory);
+    pc += (!V) ? static_cast<int8_t>(offset) : 0;
+}
+
+void CPU::BVS_RL(Memory& memory)
+{
+    cycles = 2;
+    uint8_t offset = GetByte(memory);
+    pc += (V) ? static_cast<int8_t>(offset) : 0;
+}
+
+//Arithmetic
+void CPU::ADC_IM(Memory& memory)
+{
+    cycles = 2;
+    uint8_t acp = A, op = GetByte(memory);
+    uint16_t sum = A + op + C;
+    A = (sum & 0xFF);
+    C = (sum & 0xFF00) > 0;
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+    V = (((acp & 0b10000000) ^ (op & 0b10000000)) == 0) ? (A & 0b10000000) != (acp & 0b10000000) : 0;
+}
+
+void CPU::ADC_ZP(Memory& memory)
+{
+    cycles = 3;
+    uint8_t acp = A, op = ReadByte(memory, GetByte(memory));
+    uint16_t sum = A + op + C;
+    A = (sum & 0xFF);
+    C = (sum & 0xFF00) > 0;
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+    V = (((acp & 0b10000000) ^ (op & 0b10000000)) == 0) ? (A & 0b10000000) != (acp & 0b10000000) : 0;
+}
+
+void CPU::ADC_ZP_X(Memory& memory)
+{
+    cycles = 4;
+    uint8_t acp = A, op = ReadByte(memory, GetByte(memory) + X);
+    uint16_t sum = A + op + C;
+    A = (sum & 0xFF);
+    C = (sum & 0xFF00) > 0;
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+    V = (((acp & 0b10000000) ^ (op & 0b10000000)) == 0) ? (A & 0b10000000) != (acp & 0b10000000) : 0;
+}
+
+void CPU::ADC_AB(Memory& memory)
+{
+    cycles = 4;
+    uint8_t acp = A, op = ReadByte(memory, GetWord(memory));
+    uint16_t sum = A + op + C;
+    A = (sum & 0xFF);
+    C = (sum & 0xFF00) > 0;
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+    V = (((acp & 0b10000000) ^ (op & 0b10000000)) == 0) ? (A & 0b10000000) != (acp & 0b10000000) : 0;
+}
+
+void CPU::ADC_AB_X(Memory& memory)
+{
+    cycles = 4;
+    uint8_t acp = A, op = ReadByte(memory, GetWord(memory) + X);
+    uint16_t sum = A + op + C;
+    A = (sum & 0xFF);
+    C = (sum & 0xFF00) > 0;
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+    V = (((acp & 0b10000000) ^ (op & 0b10000000)) == 0) ? (A & 0b10000000) != (acp & 0b10000000) : 0;
+}
+
+void CPU::ADC_AB_Y(Memory& memory)
+{
+    cycles = 4;
+    uint8_t acp = A, op = ReadByte(memory, GetWord(memory) + Y);
+    uint16_t sum = A + op + C;
+    A = (sum & 0xFF);
+    C = (sum & 0xFF00) > 0;
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+    V = (((acp & 0b10000000) ^ (op & 0b10000000)) == 0) ? (A & 0b10000000) != (acp & 0b10000000) : 0;
+}
+
+void CPU::ADC_ID_X(Memory& memory)
+{
+    cycles = 6;
+    uint8_t acp = A, op = ReadByte(memory, ReadWord(memory, (uint16_t)(GetByte(memory) + X)));
+    cycles--;
+    uint16_t sum = A + op + C;
+    A = (sum & 0xFF);
+    C = (sum & 0xFF00) > 0;
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+    V = (((acp & 0b10000000) ^ (op & 0b10000000)) == 0) ? (A & 0b10000000) != (acp & 0b10000000) : 0;
+}
+
+void CPU::ADC_ID_Y(Memory& memory)
+{
+    cycles = 5;
+    uint8_t acp = A, op = ReadByte(memory, ReadWord(memory, (uint16_t)(GetByte(memory))) + Y);
+    uint16_t sum = A + op + C;
+    A = (sum & 0xFF);
+    C = (sum & 0xFF00) > 0;
+    Z = (A == 0);
+    N = (A & 0b10000000) > 0;
+    V = (((acp & 0b10000000) ^ (op & 0b10000000)) == 0) ? (A & 0b10000000) != (acp & 0b10000000) : 0;
 }
