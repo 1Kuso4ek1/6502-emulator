@@ -26,9 +26,9 @@ int main(int argc, char** argv)
     std::string action;
     std::stringstream a;
     uint16_t addr;
-    bool memoryControl;
-    memoryControl = (strcmp(argv[1], "--memory-control") == 0); 
-    
+    bool memoryControl, status;
+    memoryControl = (strcmp(argv[1], "--memory-control") == 0) || (strcmp(argv[2], "--memory-control") == 0); 
+    status = (strcmp(argv[1], "--show-status") == 0) || (strcmp(argv[2], "--show-status") == 0); 
     if(strcmp(argv[1], "--help") == 0)
     {
         std::cout << "Usage: ./6502 [option] *file path* *number of executions* *PC address*" << std::endl;
@@ -36,6 +36,7 @@ int main(int argc, char** argv)
         std::cout << "--help - Display this information" << std::endl;
         std::cout << "--help-debug - Display help " << std::endl;
         std::cout << "--memory-control - Enable runtime memory control mode" << std::endl;
+        std::cout << "--show-status - If enabled, emulator will write current status every step (PC, registers, etc.)" << std::endl;
         exit(EXIT_SUCCESS);
     }
     
@@ -47,19 +48,19 @@ int main(int argc, char** argv)
         exit(EXIT_SUCCESS);
     }
 
-    a << argv[(int)(memoryControl + 3)];
+    a << argv[(int)(memoryControl + status + 3)];
     a >> std::hex >> addr;
     cpu.Reset(m, addr);
     
-    if(!ReadFile(argv[(int)(memoryControl + 1)], m, addr))
+    if(!ReadFile(argv[(int)(memoryControl + status + 1)], m, addr))
     {
         std::cout << "Error: can't read file" << std::endl;
         exit(EXIT_FAILURE);
     }
     
-    for(int i = 0; i < atoi(argv[(int)(memoryControl + 2)]); i++) 
+    for(int i = 0; i < atoi(argv[(int)(memoryControl + status + 2)]); i++) 
     {
-        cpu.GetStatus(m);
+        if(status) cpu.GetStatus(m);
         cpu.Execute(m);
         if(memoryControl)
         {
@@ -76,7 +77,7 @@ int main(int argc, char** argv)
             else if(action == "read")
             {
                 uint16_t addr;
-                std::cin >> std::hex >> addr;
+                (std::cin >> std::hex >> addr).get();
                 std::cout << "memory content in 0x" << std::hex << (int)addr << " = " << (int)m[addr] << std::endl;
                 std::cin.get();
             }
@@ -84,10 +85,14 @@ int main(int argc, char** argv)
             {
                 uint16_t addr;
                 uint8_t data;
-                std::cin >> addr;
-                std::cin >> data;
+                (std::cin >> addr).get();
+                (std::cin >> data).get();
                 m[addr] = data;
                 std::cin.get();
+            }
+            else if(action == "stop")
+            {
+                exit(EXIT_SUCCESS);
             }
         }
         //cpu.GetStatus(m);
