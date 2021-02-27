@@ -144,4 +144,48 @@ private:
     void EOR_AB_Y(Memory& memory); //EOR absolute, Y
     void EOR_ID_X(Memory& memory); //EOR indirect, X
     void EOR_ID_Y(Memory& memory); //EOR indirect, Y
+    
+    //BIT - Bit test
+    void BIT_ZP(Memory& memory); //BIT zero page
+    void BIT_AB(Memory& memory); //BIT absolute
+
+    //Increments and decrements
+    //INC - Increment a memory location
+    void INC_ZP(Memory& memory); //INC zero page
+    void INC_ZP_X(Memory& memory); //INC zero page, X
+    void INC_AB(Memory& memory); //INC absolute
+    void INC_AB_X(Memory& memory); //INC absolute, X
+
+    void INX_IP(); //Increment X register
+    void INY_IP(); //Increment Y register
+
+    //DEC - Decrement a memory location
+    void DEC_ZP(Memory& memory); //DEC zero page
+    void DEC_ZP_X(Memory& memory); //DEC zero page, X
+    void DEC_AB(Memory& memory); //DEC absolute
+    void DEC_AB_X(Memory& memory); //DEC absolute, X
+
+    void DEX_IP(); //Decrement X register
+    void DEY_IP(); //Decrement Y register
+
+    //Branches
+    void BCC_RL(Memory& memory); //Branch if carry flag clear
+    void BCS_RL(Memory& memory); //Branch if carry flag is set
+    void BNE_RL(Memory& memory); //Branch if zero flag is clear
+    void BEQ_RL(Memory& memory); //Branch if zero flag is set
+    void BPL_RL(Memory& memory); //Branch if negative flag is clear
+    void BMI_RL(Memory& memory); //Branch if negative flag is set
+    void BVC_RL(Memory& memory); //Branch if overflow flag is clear
+    void BVS_RL(Memory& memory); //Branch if overflow flag is set
+
+    //Arithmetic
+    //ADC - Add with carry
+    void ADC_IM(Memory& memory); //ADC immediate
+    void ADC_ZP(Memory& memory); //ADC zero page
+    void ADC_ZP_X(Memory& memory); //ADC zero page, X
+    void ADC_AB(Memory& memory); //ADC absolute
+    void ADC_AB_X(Memory& memory); //ACD absolute, X
+    void ADC_AB_Y(Memory& memory); //ACD absolute, Y
+    void ADC_ID_X(Memory& memory); //ACD indirect, X
+    void ADC_ID_Y(Memory& memory); //ACD indirect, Y
 };
