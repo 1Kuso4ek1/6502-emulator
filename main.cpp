@@ -31,7 +31,7 @@ int main(int argc, char** argv)
     status = (strcmp(argv[1], "--show-status") == 0) || (strcmp(argv[2], "--show-status") == 0); 
     if(strcmp(argv[1], "--help") == 0)
     {
-        std::cout << "Usage: ./6502 [option] *file path* *number of executions* *PC address*" << std::endl;
+        std::cout << "Usage: ./6502 [option] *file path* *PC address*" << std::endl;
         std::cout << "Options:" << std::endl;
         std::cout << "--help - Display this information" << std::endl;
         std::cout << "--help-debug - Display help " << std::endl;
@@ -48,7 +48,7 @@ int main(int argc, char** argv)
         exit(EXIT_SUCCESS);
     }
 
-    a << argv[(int)(memoryControl + status + 3)];
+    a << argv[(int)(memoryControl + status + 2)];
     a >> std::hex >> addr;
     cpu.Reset(m, addr);
     
@@ -58,10 +58,22 @@ int main(int argc, char** argv)
         exit(EXIT_FAILURE);
     }
     
-    for(int i = 0; i < atoi(argv[(int)(memoryControl + status + 2)]); i++) 
+    for(;;) 
     {
-        if(status) cpu.GetStatus(m);
-        cpu.Execute(m);
+        if(status)
+        {
+            #ifndef WIN_32
+            system("clear");
+            #else
+            system("cls");
+            #endif
+            cpu.GetStatus(m);
+        }
+        if(cpu.Execute(m))
+        {
+            std::cout << "BRK Handled" << std::endl;
+            if(!memoryControl) break;
+        }
         if(memoryControl)
         {
             (std::cin >> action).get();
