@@ -13,6 +13,6 @@ Second method:
 Go to https://skilldrick.github.io/easy6502/, write your code, then press "Assemble" button, when you see "Code assembled successfully, * bytes.", press "Hexdump" button, open your hex editor (for example, Bless), write object code and save the file.
 To run this code write
 ```
-./6502 *yourprogram* *number of executions* *PC address*
+./6502 *yourprogram* *PC address*
 ```
 in terminal, for more commands use --help flag.
