@@ -5,8 +5,9 @@ class CPU
 {
 public:
     void Reset(Memory& memory, uint16_t start);
-    void Execute(Memory& memory);
     void GetStatus(Memory& memory);
+    
+    bool Execute(Memory& memory);
 private:
     uint8_t GetByte(Memory& memory);
     uint8_t ReadByte(Memory& memory, uint16_t address);
@@ -184,8 +185,72 @@ private:
     void ADC_ZP(Memory& memory); //ADC zero page
     void ADC_ZP_X(Memory& memory); //ADC zero page, X
     void ADC_AB(Memory& memory); //ADC absolute
-    void ADC_AB_X(Memory& memory); //ACD absolute, X
-    void ADC_AB_Y(Memory& memory); //ACD absolute, Y
-    void ADC_ID_X(Memory& memory); //ACD indirect, X
-    void ADC_ID_Y(Memory& memory); //ACD indirect, Y
+    void ADC_AB_X(Memory& memory); //ADC absolute, X
+    void ADC_AB_Y(Memory& memory); //ADC absolute, Y
+    void ADC_ID_X(Memory& memory); //ADC indirect, X
+    void ADC_ID_Y(Memory& memory); //ADC indirect, Y
+
+    //SBC - Subtract with carry
+    void SBC_IM(Memory& memory); //SBC immediate
+    void SBC_ZP(Memory& memory); //SBC zero page
+    void SBC_ZP_X(Memory& memory); //SBC zero page, X
+    void SBC_AB(Memory& memory); //SBC absolute
+    void SBC_AB_X(Memory& memory); //SBD absolute, X
+    void SBC_AB_Y(Memory& memory); //SBD absolute, Y
+    void SBC_ID_X(Memory& memory); //SBD indirect, X
+    void SBC_ID_Y(Memory& memory); //SBD indirect, Y
+
+    //CMP - Compare accumulator
+    void CMP_IM(Memory& memory); //CMP immediate
+    void CMP_ZP(Memory& memory); //CMP zero page
+    void CMP_ZP_X(Memory& memory); //CMP zero page, X
+    void CMP_AB(Memory& memory); //CMP absolute
+    void CMP_AB_X(Memory& memory); //CMP absolute, X
+    void CMP_AB_Y(Memory& memory); //CMP absolute, Y
+    void CMP_ID_X(Memory& memory); //CMP indirect, X
+    void CMP_ID_Y(Memory& memory); //CMP indirect, Y
+
+    //CPX - Compare X register
+    void CPX_IM(Memory& memory); //CPX immediate
+    void CPX_ZP(Memory& memory); //CPX zero page
+    void CPX_AB(Memory& memory); //CPX absolute
+
+    //CPY - Compare Y register
+    void CPY_IM(Memory& memory); //CPY immediate
+    void CPY_ZP(Memory& memory); //CPY zero page
+    void CPY_AB(Memory& memory); //CPY absolute
+
+    //Shifts
+    //ASL - Arithmetic shift left
+    void ASL_AC(); //ASL accumulator
+    void ASL_ZP(Memory& memory); //ASL zero page
+    void ASL_ZP_X(Memory& memory); //ASL zero page, X
+    void ASL_AB(Memory& memory); //ASL absolute
+    void ASL_AB_X(Memory& memory); //ASL absolute, X
+
+    //LSR - Logical shift righ
+    void LSR_AC(); //LSR accumulator
+    void LSR_ZP(Memory& memory); //LSR zero page
+    void LSR_ZP_X(Memory& memory); //LSR zero page, X
+    void LSR_AB(Memory& memory); //LSR absolute
+    void LSR_AB_X(Memory& memory); //LSR absolute, X
+
+    //ROL - Rotate left
+    void ROL_AC(); //ROL accumulator
+    void ROL_ZP(Memory& memory); //ROL zero page
+    void ROL_ZP_X(Memory& memory); //ROL zero page, X
+    void ROL_AB(Memory& memory); //ROL absolute
+    void ROL_AB_X(Memory& memory); //ROL absolute, X
+
+    //ROR - Rotate right
+    void ROR_AC(); //ROR accumulator
+    void ROR_ZP(Memory& memory); //ROR zero page
+    void ROR_ZP_X(Memory& memory); //ROR zero page, X
+    void ROR_AB(Memory& memory); //ROR absolute
+    void ROR_AB_X(Memory& memory); //ROR absolute, X
+
+    //System functions
+    void BRK_IP(Memory& memory); //Force an interrupt
+    void NOP_IP(); //No operation
+    void RTI_IP(Memory& memory); //Return from interrupt
 };
