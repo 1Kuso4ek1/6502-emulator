@@ -11,6 +11,8 @@ First method:
 Go to https://www.masswerk.at/6502/assembler.html, in "src" text box write assembler code, then press "generate code" button. Open your hex editor (for example, Bless), write object code and save the file.
 Second method:
 Go to https://skilldrick.github.io/easy6502/, write your code, then press "Assemble" button, when you see "Code assembled successfully, * bytes.", press "Hexdump" button, open your hex editor (for example, Bless), write object code and save the file.
+Third method:
+Simply download any 6502 assembler (http://www.6502.org/tools/asm/). 
 To run this code write
 ```
 ./6502 *yourprogram* *PC address*
