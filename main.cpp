@@ -60,11 +60,11 @@ int main(int argc, char** argv)
     status = (strcmp(argv[1], "--show-status") == 0) || (strcmp(argv[2], "--show-status") == 0) || (strcmp(argv[3], "--show-status") == 0); 
     screen = (strcmp(argv[1], "--show-screen") == 0) || (strcmp(argv[2], "--show-screen") == 0) || (strcmp(argv[3], "--show-screen") == 0); 
 
-    a << argv[(int)(memoryControl + status + 2)];
+    a << argv[(int)(memoryControl + status + screen + 2)];
     a >> std::hex >> addr;
     cpu.Reset(m, addr);
     
-    if(!ReadFile(argv[(int)(memoryControl + status + 1)], m, addr))
+    if(!ReadFile(argv[(int)(memoryControl + status + screen + 1)], m, addr))
     {
         std::cout << "Error: can't read file" << std::endl;
         exit(EXIT_FAILURE);
