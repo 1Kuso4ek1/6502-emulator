@@ -6,6 +6,12 @@ main.cpp
 src/CPU.cpp
 src/Memory.cpp
 }
+libs {
+sfml-system
+sfml-window
+sfml-graphics
+sfml-audio
+}
 name {
 6502
 }
