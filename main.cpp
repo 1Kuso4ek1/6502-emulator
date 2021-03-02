@@ -56,9 +56,9 @@ int main(int argc, char** argv)
         exit(EXIT_SUCCESS);
     }
 
-    memoryControl = (strcmp(argv[1], "--memory-control") == 0) || (strcmp(argv[2], "--memory-control") == 0) || (strcmp(argv[3], "--memory-control") == 0); 
-    status = (strcmp(argv[1], "--show-status") == 0) || (strcmp(argv[2], "--show-status") == 0) || (strcmp(argv[3], "--show-status") == 0); 
-    screen = (strcmp(argv[1], "--show-screen") == 0) || (strcmp(argv[2], "--show-screen") == 0) || (strcmp(argv[3], "--show-screen") == 0); 
+    memoryControl = (strcmp(argv[1], "--memory-control") == 0) || (strcmp(argv[2], "--memory-control") == 0) || ((argc >= 4) && (strcmp(argv[3], "--memory-control") == 0)); 
+    status = (strcmp(argv[1], "--show-status") == 0) || (strcmp(argv[2], "--show-status") == 0) || ((argc >= 4) && (strcmp(argv[3], "--show-status") == 0)); 
+    screen = (strcmp(argv[1], "--show-screen") == 0) || (strcmp(argv[2], "--show-screen") == 0) || ((argc >= 4) && (strcmp(argv[3], "--show-screen") == 0)); 
 
     a << argv[(int)(memoryControl + status + screen + 2)];
     a >> std::hex >> addr;
@@ -73,7 +73,7 @@ int main(int argc, char** argv)
     {
         Setup();
     }
-    m[0x00ff] = 0xff;
+    if(screen) m[0x00ff] = 0xff;
     for(;;) 
     {
         if(status)
