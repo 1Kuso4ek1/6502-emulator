@@ -44,7 +44,8 @@ int main(int argc, char** argv)
     {
         std::cout << "stack - Display stack content" << std::endl;
         std::cout << "read (next line - absolute address) - Display memory content at absolute address" << std::endl;
-        std::cout << "write (next line - absolute address, second line - data) - Write data at absolute address" << std::endl;
+        std::cout << "write (next line - absolute address, space, data) - Write data at absolute address" << std::endl;
+        std::cout << "stop - Exit emulator" << std::endl;
         exit(EXIT_SUCCESS);
     }
 
@@ -72,8 +73,8 @@ int main(int argc, char** argv)
     if(screen)
     {
         Setup();
+        m[0x00ff] = 0xff;
     }
-    if(screen) m[0x00ff] = 0xff;
     for(;;) 
     {
         if(status)
@@ -85,6 +86,7 @@ int main(int argc, char** argv)
             #endif
             cpu.GetStatus(m);
         }
+        Events(m);
         if(cpu.Execute(m))
         {
             std::cout << "BRK Handled" << std::endl;
@@ -112,18 +114,14 @@ int main(int argc, char** argv)
             }
             else if(action == "write")
             {
-                uint16_t addr;
-                uint8_t data;
-                (std::cin >> addr).get();
-                (std::cin >> data).get();
-                m[addr] = data;
-                std::cin.get();
+                uint16_t addr, data;
+                (std::cin >> std::hex >> addr >> data).get();
+                m[addr] = static_cast<uint8_t>(data);
             }
             else if(action == "stop")
             {
                 exit(EXIT_SUCCESS);
             }
         }
-        //cpu.GetStatus(m);
     } 
 }
