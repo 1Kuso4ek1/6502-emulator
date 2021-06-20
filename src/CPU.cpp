@@ -1738,7 +1738,6 @@ void CPU::BRK_IP(Memory& memory)
 void CPU::NOP_IP()
 {
     cycles = 2;
-    pc++;
     cycles--;
 }
 
