@@ -4,7 +4,7 @@
 
 static std::unordered_map<std::string, std::string> help =
 {
-    { "--help", "Usage: ./6502 [options] *file path* *PC address*\n"
+    { "--help", "Usage: ./6502 [options] *file path* *memory start address* *PC address*\n"
                     "Options:\n"
                     "--help - Display this information\n"
                     "--help-memory-control - Display help on memory control\n"

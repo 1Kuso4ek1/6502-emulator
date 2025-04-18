@@ -4,7 +4,7 @@
 #include <string>
 #include <fstream>
 
-inline bool ReadFile(const std::string& path, MemoryBus& memory, uint16_t pc)
+inline bool ReadFile(const std::string& path, MemoryBus& memory, uint16_t start = 0)
 {
     std::ifstream file(path, std::ios::binary);
 
@@ -13,10 +13,10 @@ inline bool ReadFile(const std::string& path, MemoryBus& memory, uint16_t pc)
         file >> std::noskipws;
         
         uint8_t data;
-        uint16_t offset = pc - 1;
+        uint16_t index = start > 0 ? start - 1 : 0;
         
         while(file >> data)
-            memory.Write(++offset, data);
+            memory.Write(++index, data);
         
         return true;
     }

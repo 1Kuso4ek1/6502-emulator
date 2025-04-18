@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
     std::string action;
     std::stringstream a;
 
-    uint16_t addr;
+    uint16_t pc{}, start{};
     bool memoryControl{}, status{};
     
     if(help.find(argv[1]) != help.end())
@@ -30,15 +30,14 @@ int main(int argc, char* argv[])
         status = (std::string(argv[i]) == "--show-status" ? true : status);
     }
 
-    a << argv[argc - 1];
-    a >> std::hex >> addr;
+    a << argv[argc - 2] << " " << argv[argc - 1];
+    a >> std::hex >> start >> pc;
 
-    if(addr == 0)
-        addr = 0x2000;
+    std::cout << a.str() << std::endl;
 
-    cpu.Reset(addr);
+    cpu.Reset(pc);
     
-    if(!ReadFile(argv[argc - 2], m, addr))
+    if(!ReadFile(argv[argc - 3], m, start))
     {
         std::cout << "Error: can't read file" << std::endl;
         

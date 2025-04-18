@@ -56,9 +56,10 @@ You can create 6502 programs using several methods. The output of these methods 
 Once you have your program as a binary file (e.g., `myprogram.bin`), you can run it with the emulator:
 
 ```bash
-./6502 /path/to/bin/myprogram.bin 2000
+./6502 /path/to/bin/myprogram.bin 200 2000
 ```
 
+> **200** is the starting address in memory where the emulator should load your program. Replace this with the appropriate address for your program.
 > **2000** is the starting address (program counter - PC) where the emulator should begin executing your code. Replace this with the appropriate address for your program.
 
 **Command-Line Options:**
